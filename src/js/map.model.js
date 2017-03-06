@@ -3,6 +3,7 @@ var MapClass = function () {
     self.map = null;
     self.location = { lat: -34.397, lng: 150.644 };
     self.geocoder = new google.maps.Geocoder();
+    self.marker = null;
 };
 
 MapClass.prototype.getLocation = function () {
@@ -15,14 +16,26 @@ MapClass.prototype.setLocation = function (location) {
     self.location = location;
     if (self.map) {
         self.map.setCenter(self.location);
+        if (self.marker) {
+            self.marker.setPosition(self.location);
+        }
+        else {
+            self.marker = new google.maps.Marker({
+                position: self.location,
+                map: self.map
+            });
+        }
     }
 };
 
 MapClass.prototype.init = function (elem) {
     var self = this;
-    self.map = _getMap();
-
+    _getMap();
     function _getMap() {
+        self.map =  new google.maps.Map(elem, {
+            center: self.location,
+            zoom: 15
+        });
         if (navigator && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 self.setLocation({
@@ -31,10 +44,6 @@ MapClass.prototype.init = function (elem) {
                 });
             });
         }
-        return new google.maps.Map(elem, {
-            center: self.location,
-            zoom: 8
-        });
     }
 }
 
@@ -46,8 +55,7 @@ MapClass.prototype.getAddresses = function (query) {
                 resolve(results);
             }
             else {
-                console.log('Geocode fails due to ' + status);
-                reject(results);
+                reject(status);
             }
         });
     });

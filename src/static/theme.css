@@ -17,8 +17,8 @@ html, body {
 .search {
     position: absolute;
     top: 10px;
-    width: 80%;
-    left: 10%;
+    width: 40%;
+    left: 30%;
     z-index: 2;
 }
 
@@ -26,4 +26,30 @@ html, body {
     width: 100%;
     height: 30px;
     font-size: 25px;
+}
+
+.search-results {
+    margin: 0;
+    background-color: white;
+    display: block;
+    list-style-type: none;
+    list-style-position: inside;
+    padding: 0;
+    border: 2px solid red;
+    max-height: 300px;
+    overflow: auto;
+    width:100%;
+}
+
+.search-item {
+    font-size: 20px;
+    display: block;
+    border-bottom: 1px solid gray;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.search-item:hover {
+    background-color: blueviolet;
+    color: white;
 }

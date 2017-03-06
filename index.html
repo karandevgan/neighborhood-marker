@@ -13,7 +13,13 @@
 <body>
     <div class="container">
         <div class="search">
-            <input type="text" placeholder="Search" />
+            <input id="inputSearch" type="text" placeholder="Search" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': getAddresses }"
+            />
+            <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: addresses().length > 0">
+                <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
+                    <span data-bind="text: address.formatted_address"></span>
+                </li>
+            </ul>
         </div>
         <div id="map"></div>
     </div>
