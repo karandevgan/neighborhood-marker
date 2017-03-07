@@ -11,9 +11,9 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="display: none" data-bind="visible: true">
         <div class="search">
-            <input id="inputSearch" type="text" placeholder="Search" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': getAddresses }"
+            <input class="form-control" id="inputSearch" type="text" placeholder="Search" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'blur': resetSelection }"
             />
             <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: addresses().length > 0">
                 <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
