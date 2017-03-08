@@ -3,7 +3,9 @@ var MapClass = function () {
     self.map = null;
     self.location = { lat: -34.397, lng: 150.644 };
     self.geocoder = new google.maps.Geocoder();
-    self.marker = null;
+    self.placesService = null;
+    self.searchMarker = null;
+    self.infoWindow = new google.maps.InfoWindow;
 };
 
 MapClass.prototype.getLocation = function () {
@@ -11,16 +13,18 @@ MapClass.prototype.getLocation = function () {
     return self.location;
 };
 
-MapClass.prototype.setLocation = function (location) {
+MapClass.prototype.setLocation = function (location, notToBeCentered) {
     var self = this;
     self.location = location;
     if (self.map) {
-        self.map.setCenter(self.location);
-        if (self.marker) {
-            self.marker.setPosition(self.location);
+        if (!notToBeCentered) {
+            self.map.setCenter(self.location);
+        }
+        if (self.searchMarker) {
+            self.searchMarker.setPosition(self.location);
         }
         else {
-            self.marker = new google.maps.Marker({
+            self.searchMarker = new google.maps.Marker({
                 position: self.location,
                 map: self.map
             });
@@ -30,12 +34,31 @@ MapClass.prototype.setLocation = function (location) {
 
 MapClass.prototype.init = function (elem) {
     var self = this;
-    _getMap();
-    function _getMap() {
-        self.map =  new google.maps.Map(elem, {
+    _setMap();
+    function _setMap() {
+        self.map = new google.maps.Map(elem, {
             center: self.location,
             zoom: 15
         });
+
+        self.placesService = new google.maps.places.PlacesService(self.map);
+
+        self.map.addListener('click', function (event) {
+            self.setLocation(event.latLng, true);
+            self.infoWindow.setContent("");
+            self.infoWindow.close();
+            if (event.placeId) {
+                self.placesService.getDetails({ placeId: event.placeId }, function (place, status) {
+                    if (status === 'OK') {
+                        self.infoWindow.setContent(place.name);
+                        self.infoWindow.open(self.map, self.searchMarker);
+                    }
+                });
+                self.infoWindow.setPosition(event.latLng);
+            }
+            event.stop();
+        });
+
         if (navigator && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 self.setLocation({

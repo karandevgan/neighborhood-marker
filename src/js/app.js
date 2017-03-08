@@ -2,17 +2,21 @@ function MapViewModel() {
     var self = this;
 
     // Declare all the private variables here
-
+    var isSearchTextChanged = false;
     var timeout;
     var keyCode = {
-        ARROW_DOWN: 40,
-        ARROW_UP: 38,
-        ENTER: 13
+        ARROW_DOWN: 'ArrowDown',
+        ARROW_UP: 'ArrowUp',
+        ARROW_RIGHT: 'ArrowRight',
+        ARROW_LEFT: 'ArrowLeft',
+        ENTER: 'Enter',
+        ESCAPE: 'Escape'
     };
     var currentIndex = -1;
     var prevIndex = -1;
     var searchItemsParent = document.getElementsByClassName('search-results');
     var children = searchItemsParent[0].children;
+    var searchInputTextBox = document.getElementById('inputSearch');
 
     // Declare all the objects here
 
@@ -20,6 +24,7 @@ function MapViewModel() {
     self.init = mapObj.init(document.getElementById('map'));
     self.searchText = ko.observable("");
     self.addresses = ko.observable([]);
+    self.isResultsPanelActive = ko.observable(true);
 
     // Declare all the functions here
 
@@ -27,20 +32,26 @@ function MapViewModel() {
     self.resetSelection = resetSelection;
     self.getAddresses = getAddresses;
     self.setLocation = setLocation;
+    self.searchText.subscribe(searchTextSubscription);
+    self.areResultsVisible = ko.computed(areResultsVisible);
+    self.searchInputClickHandler = searchInputClickHandler;
+    self.searchInputBlurHandler = searchInputBlurHandler;
 
     // Define all the functions here
 
     function handleKeyPress(data, event) {
-        if (event.keyCode != keyCode.ARROW_DOWN && event.keyCode != keyCode.ARROW_UP && event.keyCode != keyCode.ENTER) {
+        if ((event.key === keyCode.ENTER && self.isResultsPanelActive() === false) ||
+            (Object.values(keyCode).indexOf(event.key) === -1 && isSearchTextChanged)) {
             self.addresses([]);
             self.resetSelection();
             self.getAddresses();
+            isSearchTextChanged = false;
         }
         else {
-            selectChoice(event.keyCode);
+            selectChoice(event.key);
         }
     }
-    
+
     function resetSelection() {
         currentIndex = -1;
         prevIndex = -1
@@ -54,10 +65,12 @@ function MapViewModel() {
             // Restrict the calls to 500ms debounce
             timeout = setTimeout(function () {
                 self.mapObj.getAddresses(self.searchText()).then(function (data) {
-                    if (data)
+                    if (data) {
                         self.addresses(data);
+                        self.isResultsPanelActive(true);
+                    }
                 }).catch(function (err) {
-                    console.err('Geocode fails due to ' + err);
+                    console.error('Geocode fails due to ' + err);
                 });
             }, 500);
         }
@@ -70,6 +83,7 @@ function MapViewModel() {
         try {
             self.searchText(address.formatted_address);
             self.addresses([]);
+            self.isResultsPanelActive(false);
             var location = {
                 lat: address.geometry.location.lat(),
                 lng: address.geometry.location.lng()
@@ -82,7 +96,7 @@ function MapViewModel() {
     }
 
     function selectChoice() {
-        if (event.keyCode === keyCode.ARROW_DOWN) {
+        if (event.key === keyCode.ARROW_DOWN) {
             if (children.length > 0) {
                 if (prevIndex != -1) {
                     children[prevIndex].classList.remove('search-item-hover');
@@ -93,7 +107,7 @@ function MapViewModel() {
                 children[currentIndex].classList.add('search-item-hover');
                 prevIndex = currentIndex;
             }
-        } else if (event.keyCode === keyCode.ARROW_UP) {
+        } else if (event.key === keyCode.ARROW_UP) {
             if (children.length > 0) {
                 if (prevIndex != -1) {
                     children[prevIndex].classList.remove('search-item-hover');
@@ -104,10 +118,30 @@ function MapViewModel() {
                 children[currentIndex].classList.add('search-item-hover');
                 prevIndex = currentIndex;
             }
-        } else if (event.keyCode === keyCode.ENTER) {
+        } else if (event.key === keyCode.ENTER) {
             if (prevIndex != -1) {
                 children[prevIndex].click();
             }
+        }
+    }
+
+    function searchTextSubscription(value) {
+        isSearchTextChanged = true;
+    }
+
+    function areResultsVisible() {
+        return self.addresses().length > 0 && self.isResultsPanelActive();
+    }
+
+    function searchInputClickHandler() {
+        searchInputTextBox.classList.add('search-input-focus');
+    }
+
+    function searchInputBlurHandler(data, event) {
+        self.resetSelection();
+        self.isResultsPanelActive(false);
+        if (!self.searchText() || self.searchText() === "") {
+            searchInputTextBox.classList.remove('search-input-focus');
         }
     }
 }

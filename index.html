@@ -12,18 +12,22 @@
 
 <body>
     <div class="container" style="display: none" data-bind="visible: true">
-        <div class="search">
-            <input class="form-control" id="inputSearch" type="text" placeholder="Search" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'blur': resetSelection }"
-            />
-            <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: addresses().length > 0">
-                <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
-                    <span data-bind="text: address.formatted_address"></span>
-                </li>
-            </ul>
+        <div id="header">
+            <div class="search">
+                <input class="form-control" id="inputSearch" type="text" placeholder="Search Map" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'click': searchInputClickHandler }"
+                />
+                <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: areResultsVisible">
+                    <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
+                        <span data-bind="text: address.formatted_address"></span>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div id="map"></div>
+        <div class="main-content" data-bind="event: {'click': searchInputBlurHandler}">
+            <div id="map"></div>
+        </div>
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB6NFEqUh3MOuxSW6t1cn04RVrMz-3snU"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB6NFEqUh3MOuxSW6t1cn04RVrMz-3snU&libraries=places"></script>
     <script src="src/js/map.model.js"></script>
     <script src="src/js/app.js"></script>
 </body>
