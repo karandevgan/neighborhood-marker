@@ -20,7 +20,7 @@ html, body {
 
 .form-control {
     outline: none;
-    border: 2px solid #dadada;
+    border: 2px solid blueviolet;
     transition: box-shadow linear 50ms;
     padding-left: 10px;
     padding-top: 5px;
@@ -34,21 +34,147 @@ html, body {
 }
 
 #header {
-    position: absolute;
+    position: fixed;
     width: 100%;
+    height: 60px;
     z-index: 1;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,200,0.2);
+    transition: background-color linear 500ms;
+}
+
+#header:hover {
+    background-color: rgba(0,0,200,0.4);
+}
+
+.menu-icon {
+    margin-left: 20px;
+    margin-top: 8px;
+    display: inline-block;
+    padding: 5px;
+}
+
+.menu-icon span {
+    height: 5px;
+    border-radius: 9px;
+    width: 40px;
+    display: block;
+    margin-bottom: 7px;
+    background-color: white;
+}
+
+.menu-icon span:last-child {
+    margin-bottom: 0px;
+}
+
+.neighbourhood-panel {
+    display: block;
+    transform: translateZ(10);
+    will-change: transform;
+    transform: translateX(-300px);
+    width: 300px;
+    position: fixed;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: blue;
+    top: 0;
+    z-index: 10;
+}
+
+.neighbourhood-panel .header-text {
+    color: white;
+    font-family: sans-serif;
+    margin-top: 14px;
+    margin-left: 15px;
+}
+
+.neighbourhood-panel .close {
+    color: skyblue;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-weight: 900;
+    font-size: 20px;
+    transition: color linear 500ms;
+}
+
+.neighbourhood-panel .close:hover {
+    cursor: pointer;
+    color: blueviolet;
+}
+
+.neighbourhood-list {
+    width: 93%;
+    margin: 0;
+    padding: 0;
+}
+
+.neighbourhood-list .item {
+    display: inline-flex;
+    width: 100%;
+    background-color: gray;
+    padding: 10px;
+    position: relative;
+    border-bottom: 1px solid seagreen;
+}
+
+.neighbourhood-list .item:hover {
+    background-color: dimgray;
+    color: white;
+    cursor: pointer;
+}
+
+
+.neighbourhood-list .item span {
+    width: 250px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+.neighbourhood-list .item a {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.neighbourhood-list .item a:hover {
+    color: black;
+}
+
+.slide-in {
+    animation: slide-in 0.5s forwards;
+}
+
+.slide-out {
+    animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+    100% { transform: translateX(0px); }
+}
+
+@keyframes slide-out {
+    0% { transform: translateX(0px); }
+    100% { transform: translateX(-300px); }
 }
 
 .search {
     position: relative;
-    width: 40%;
     padding: 10px;
+    margin-left: 10px;
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
     .search {
-        width: 93%;
+        width: calc(100% - 150px);
+        margin-right: 10px;
+        margin-left: 10px;
     }
 }
 
@@ -61,7 +187,6 @@ html, body {
     width: 110px;
     height: 24px;
     font-size: 18px;
-    /*transform: translateX(110%);*/
     -webkit-transition: width linear 50ms;
     -moz-transition: width linear 50ms;
     transition: width linear 50ms;
@@ -69,7 +194,7 @@ html, body {
 }
 
 .search-input-focus {
-    width: 100% !important;
+    width: calc(100% - 10px) !important;
 }
 
 .search-input-visible {
@@ -78,6 +203,7 @@ html, body {
 
 .search-results {
     margin: 0;
+    width: calc(100% - 18px);
     background-color: white;
     display: block;
     list-style-type: none;
@@ -85,8 +211,7 @@ html, body {
     padding: 0;
     max-height: 70vh;
     overflow: auto;
-    left: 11px;
-    right: -3px;
+    left: 10px;
     border-left: 1px solid gray;
     border-right: 1px solid gray;
     position: absolute;
@@ -115,4 +240,18 @@ html, body {
 
 ::-ms-input-placeholder {
     font-style: italic;
+}
+
+.header-content {
+    display: inline-block;
+}
+
+#current-location {
+    position: absolute;
+    margin: none;
+    top: 5px;
+    right: 10px;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
 }

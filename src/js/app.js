@@ -17,14 +17,18 @@ function MapViewModel() {
     var searchItemsParent = document.getElementsByClassName('search-results');
     var children = searchItemsParent[0].children;
     var searchInputTextBox = document.getElementById('inputSearch');
+    var neighbourhoodPanel = document.getElementsByClassName('neighbourhood-panel')[0];
 
     // Declare all the objects here
 
     self.mapObj = new MapClass();
     self.init = mapObj.init(document.getElementById('map'));
     self.searchText = ko.observable("");
-    self.addresses = ko.observable([]);
+    self.addresses = ko.observableArray([]);
     self.isResultsPanelActive = ko.observable(true);
+    self.neighbourhoods = ko.computed(function() {
+        return self.mapObj.getNeighbourhoods();
+    });
 
     // Declare all the functions here
 
@@ -36,7 +40,11 @@ function MapViewModel() {
     self.areResultsVisible = ko.computed(areResultsVisible);
     self.searchInputClickHandler = searchInputClickHandler;
     self.searchInputBlurHandler = searchInputBlurHandler;
-
+    self.getCurrentLocation = getCurrentLocation;
+    self.getNeighbourhoods = getNeighbourhoods;
+    self.expandNeighbourhoodPanel = expandNeighbourhoodPanel;
+    self.closeNeighbourhoodPanel = closeNeighbourhoodPanel;
+    self.removeNeighbour = removeNeighbour;
     // Define all the functions here
 
     function handleKeyPress(data, event) {
@@ -85,10 +93,14 @@ function MapViewModel() {
             self.addresses([]);
             self.isResultsPanelActive(false);
             var location = {
-                lat: address.geometry.location.lat(),
-                lng: address.geometry.location.lng()
+                position: {
+                    lat: address.geometry.location.lat(),
+                    lng: address.geometry.location.lng()
+                },
+                name: address.formatted_address
             }
             self.mapObj.setLocation(location);
+            self.mapObj.setInfoWindow(location.position);
         }
         catch (err) {
             console.log(err);
@@ -127,6 +139,9 @@ function MapViewModel() {
 
     function searchTextSubscription(value) {
         isSearchTextChanged = true;
+        if (value) {
+            searchInputTextBox.classList.add('search-input-focus');
+        }
     }
 
     function areResultsVisible() {
@@ -137,12 +152,55 @@ function MapViewModel() {
         searchInputTextBox.classList.add('search-input-focus');
     }
 
-    function searchInputBlurHandler(data, event) {
-        self.resetSelection();
-        self.isResultsPanelActive(false);
-        if (!self.searchText() || self.searchText() === "") {
-            searchInputTextBox.classList.remove('search-input-focus');
-        }
+    function searchInputBlurHandler() {
+        window.requestAnimationFrame(function () {
+            setTimeout(function () {
+                self.resetSelection();
+                self.isResultsPanelActive(false);
+                if (!self.searchText() || self.searchText() === "") {
+                    searchInputTextBox.classList.remove('search-input-focus');
+                }
+            }, 200);
+        });
+    }
+
+    function getCurrentLocation() {
+        self.mapObj.getCurrentLocation().then(function (data) {
+            self.mapObj.infoWindow.close();
+            self.mapObj.getAddresses(data.lat + ', ' + data.lng).then(function (response) {
+                if (response.length > 0) {
+                    self.searchText(response[0].formatted_address);
+                    var location = {
+                        position: {
+                            lat: data.lat,
+                            lng: data.lng
+                        },
+                        name: response[0].formatted_address
+                    };
+                    self.mapObj.setLocation(location, false, true);
+                }
+            });
+        });
+    }
+
+    function expandNeighbourhoodPanel() {
+        if (neighbourhoodPanel.classList.contains('slide-out'))
+            neighbourhoodPanel.classList.remove('slide-out');
+        neighbourhoodPanel.classList.add('slide-in');
+    }
+
+    function closeNeighbourhoodPanel() {
+        if (neighbourhoodPanel.classList.contains('slide-in'))
+            neighbourhoodPanel.classList.remove('slide-in');
+        neighbourhoodPanel.classList.add('slide-out');
+    }
+
+    function getNeighbourhoods() {
+        return self.mapObj.getNeighbourhoods();
+    }
+
+    function removeNeighbour(data) {
+        self.mapObj.removeNeighbourhood(data);
     }
 }
 

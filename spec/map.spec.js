@@ -19,6 +19,25 @@ describe("Map", function () {
         expect(map.getLocation()).toBe(currentLocation);
     });
 
+    it('should be able to retrieve neighbourhood list', function() {
+        expect(map.getNeighbourhoods()).toBeDefined();
+    });
+
+    it('should be able to add location in neighbourhood list', function () {
+        var currentLocation = { longitude: 121, latitude: 200 };
+        map.setLocation(currentLocation);
+        map.addToNeighbourhood();
+        expect(map.getNeighbourhoods().length > 0).toBeTruthy();
+    });
+
+    it('should be able to remove location in neighbourhood list', function () {
+        var currentLocation = { longitude: 121, latitude: 200 };
+        map.setLocation(currentLocation);
+        map.addToNeighbourhood();
+        map.removeNeighbourhood(currentLocation);
+        expect(map.getNeighbourhoods().length === 0).toBeTruthy();
+    });
+
     describe("Async", function () {
         it('should be able to query the address', function (done) {
             var query = "Hyderabad";

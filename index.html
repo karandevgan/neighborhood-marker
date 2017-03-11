@@ -13,8 +13,31 @@
 <body>
     <div class="container" style="display: none" data-bind="visible: true">
         <div id="header">
+            <div class="menu-icon">
+                <a href="javascript:void(0);" data-bind="event:{'click': expandNeighbourhoodPanel}">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </a>
+            </div>
+
+            <div class="neighbourhood-panel">
+                <header>
+                    <h3 class="header-text">My Neighbourhoods</h3>
+                    <div class="close" data-bind="event: {'click': closeNeighbourhoodPanel}">X</div>
+                </header>
+                <section>
+                    <div class="neighbourhood-list" data-bind="foreach: {data: neighbourhoods, as: 'neighbourhood'}">
+                        <div class="item">
+                            <span data-bind="text: neighbourhood.name"></span>
+                            <a href="javascript:void(0);" data-bind="event: {'click': removeNeighbour.bind(neighbourhood)}">X</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
             <div class="search">
-                <input class="form-control" id="inputSearch" type="text" placeholder="Search Map" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'click': searchInputClickHandler }"
+                <input class="form-control" id="inputSearch" type="text" placeholder="Search Map" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'click': searchInputClickHandler, 'blur': searchInputBlurHandler}"
                 />
                 <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: areResultsVisible">
                     <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
@@ -22,11 +45,21 @@
                     </li>
                 </ul>
             </div>
+            <div class="header-content">
+                <img id="current-location" src="src/static/current_location.png" alt="Current Locaiton" title="Current Locaiton" data-bind="event: {'click': getCurrentLocation}"
+                />
+            </div>
         </div>
-        <div class="main-content" data-bind="event: {'click': searchInputBlurHandler}">
+        <div class="main-content">
             <div id="map"></div>
         </div>
     </div>
+
+    <script id="info-window-template" type="text/info-window-template">
+        <b>%PLACE_NAME%</b><br />
+        <a href="javascript:void(0);" id="add_neighbourhood_link">Add to Neighbourhood List</a>
+    </script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB6NFEqUh3MOuxSW6t1cn04RVrMz-3snU&libraries=places"></script>
     <script src="src/js/map.model.js"></script>
     <script src="src/js/app.js"></script>
