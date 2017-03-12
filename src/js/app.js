@@ -26,9 +26,7 @@ function MapViewModel() {
     self.searchText = ko.observable("");
     self.addresses = ko.observableArray([]);
     self.isResultsPanelActive = ko.observable(true);
-    self.neighbourhoods = ko.computed(function() {
-        return self.mapObj.getNeighbourhoods();
-    });
+    self.searchNeighbourhoodText = ko.observable("");
 
     // Declare all the functions here
 
@@ -45,6 +43,10 @@ function MapViewModel() {
     self.expandNeighbourhoodPanel = expandNeighbourhoodPanel;
     self.closeNeighbourhoodPanel = closeNeighbourhoodPanel;
     self.removeNeighbour = removeNeighbour;
+    self.neighbourhoods = ko.computed(function () {
+        var filter = self.searchNeighbourhoodText().toLowerCase();
+        return self.getNeighbourhoods(filter);
+    });
     // Define all the functions here
 
     function handleKeyPress(data, event) {
@@ -195,8 +197,14 @@ function MapViewModel() {
         neighbourhoodPanel.classList.add('slide-out');
     }
 
-    function getNeighbourhoods() {
-        return self.mapObj.getNeighbourhoods();
+    function getNeighbourhoods(filter) {
+        if (!filter)
+            return self.mapObj.getNeighbourhoods();
+        else {
+            return ko.utils.arrayFilter(self.mapObj.getNeighbourhoods(), function (item) {
+                return item.name.toLowerCase().indexOf(filter) !== -1;
+            });
+        }
     }
 
     function removeNeighbour(data) {

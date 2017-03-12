@@ -25,6 +25,10 @@
                 <header>
                     <h3 class="header-text">My Neighbourhoods</h3>
                     <div class="close" data-bind="event: {'click': closeNeighbourhoodPanel}">X</div>
+                    <div class="neighbourhood-search">
+                        <input class="form-control" type="text" placeholder="Search Neighbourhood" 
+                        data-bind="value: searchNeighbourhoodText, valueUpdate: 'afterkeydown'" />
+                    </div>
                 </header>
                 <section>
                     <div class="neighbourhood-list" data-bind="foreach: {data: neighbourhoods, as: 'neighbourhood'}">

@@ -160,6 +160,18 @@ body {
     color: black;
 }
 
+.neighbourhood-search {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.neighbourhood-search input {
+    width: 95%;
+    height: 22px;
+}
+
 .slide-in {
     animation: slide-in 0.5s forwards;
 }
