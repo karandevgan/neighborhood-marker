@@ -11,67 +11,68 @@
 </head>
 
 <body>
-    <div class="container" style="display: none" data-bind="visible: true">
-        <div id="header">
-            <div class="menu-icon">
-                <a href="javascript:void(0);" data-bind="event:{'click': expandNeighbourhoodPanel}">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </a>
-            </div>
+    <div class="wrapper">
+        <div class="container" style="display: none" data-bind="visible: true">
+            <div id="header">
+                <div class="menu-icon">
+                    <a href="javascript:void(0);" data-bind="event:{'click': expandNeighbourhoodPanel}">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </a>
+                </div>
 
-            <div class="search">
-                <input class="form-control" id="inputSearch" type="text" placeholder="Search Map" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'click': searchInputClickHandler, 'blur': searchInputBlurHandler}"
-                />
-                <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: areResultsVisible">
-                    <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
-                        <span data-bind="text: address.formatted_address"></span>
-                    </li>
-                </ul>
-            </div>
-            <div class="header-content">
-                <img id="current-location" src="src/static/current_location.png" alt="Current Locaiton" title="Current Locaiton" data-bind="event: {'click': getCurrentLocation}"
-                />
-            </div>
-        </div>
-        <div class="main-content">
-            <div id="map"></div>
-        </div>
-    </div>
-
-    <aside>
-        <div class="neighbourhood-panel">
-            <header>
-                <h3 class="header-text">My Neighbourhoods</h3>
-                <div class="close" data-bind="event: {'click': closeNeighbourhoodPanel}">X</div>
-                <div class="neighbourhood-search">
-                    <input class="form-control" type="text" placeholder="Search Neighbourhood" data-bind="value: searchNeighbourhoodText, valueUpdate: 'afterkeydown'"
+                <div class="search">
+                    <input class="form-control" id="inputSearch" type="text" placeholder="Search Map" data-bind="value: searchText, valueUpdate: 'afterkeydown', event: { 'keyup': handleKeyPress, 'click': searchInputClickHandler, 'blur': searchInputBlurHandler}"
+                    />
+                    <ul class="search-results" data-bind="foreach: {data: addresses, as: 'address'}, visible: areResultsVisible">
+                        <li class="search-item" data-bind="event: { 'click': setLocation.bind(address) }">
+                            <span data-bind="text: address.formatted_address"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="header-content">
+                    <img id="current-location" src="src/static/current_location.png" alt="Current Locaiton" title="Current Locaiton" data-bind="event: {'click': getCurrentLocation}"
                     />
                 </div>
-            </header>
-            <section>
-                <div class="neighbourhood-list" data-bind="foreach: {data: neighbourhoods, as: 'neighbourhood'}">
-                    <div class="item" data-bind="event: {'click': openNeighbourhoodDetail.bind(neighbourhood)}">
-                        <span data-bind="text: neighbourhood.name"></span>
-                        <a href="javascript:void(0);" data-bind="event: {'click': removeNeighbour.bind(neighbourhood)}">X</a>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </aside>
-
-    <aside>
-        <div class="neighbourhood-detail-container">
-            <div class="neighbourhood-detail">
-                <header>
-                    <h3 data-bind="text:neighbourhood().name">Loading...</h3>
-                    <div class="close" data-bind="event: {'click': closeNeighbourhoodDetail}">X</div>
-                </header>
+            </div>
+            <div class="main-content">
+                <div id="map"></div>
             </div>
         </div>
-    </aside>
 
+        <aside>
+            <div class="neighbourhood-panel">
+                <header>
+                    <h3 class="header-text">My Neighbourhoods</h3>
+                    <div class="close" data-bind="event: {'click': closeNeighbourhoodPanel}">X</div>
+                    <div class="neighbourhood-search">
+                        <input class="form-control" type="text" placeholder="Search Neighbourhood" data-bind="value: searchNeighbourhoodText, valueUpdate: 'afterkeydown'"
+                        />
+                    </div>
+                </header>
+                <section>
+                    <div class="neighbourhood-list" data-bind="foreach: {data: neighbourhoods, as: 'neighbourhood'}">
+                        <div class="item" data-bind="event: {'click': openNeighbourhoodDetail.bind(neighbourhood)}">
+                            <span data-bind="text: neighbourhood.name"></span>
+                            <a href="javascript:void(0);" data-bind="event: {'click': removeNeighbour.bind(neighbourhood)}">X</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </aside>
+
+        <aside>
+            <div class="neighbourhood-detail-container">
+                <div class="neighbourhood-detail">
+                    <header>
+                        <h3 data-bind="text:neighbourhood().name">Loading...</h3>
+                        <div class="close" data-bind="event: {'click': closeNeighbourhoodDetail}">X</div>
+                    </header>
+                </div>
+            </div>
+        </aside>
+    </div>
     <script id="info-window-template" type="text/info-window-template">
         <b>%PLACE_NAME%</b><br />
         <a href="javascript:void(0);" id="add_neighbourhood_link">Add to Neighbourhood List</a>
