@@ -12,6 +12,7 @@ html, body {
 
 .main-content {
     height: 100%;
+    margin-top: 60px;
 }
 
 #map {
@@ -40,6 +41,7 @@ html, body {
     z-index: 1;
     background-color: rgba(0,0,200,0.2);
     transition: background-color linear 500ms;
+    margin-top: -60px;
 }
 
 #header:hover {
@@ -64,6 +66,13 @@ html, body {
 
 .menu-icon span:last-child {
     margin-bottom: 0px;
+}
+
+@media screen and (max-width: 700px) {
+    .menu-icon span {
+        width: 30px;
+        margin-left: -15px;
+    }
 }
 
 .neighbourhood-panel {
@@ -112,14 +121,14 @@ html, body {
 .neighbourhood-list .item {
     display: inline-flex;
     width: 100%;
-    background-color: gray;
+    background-color: lightblue;
     padding: 10px;
     position: relative;
     border-bottom: 1px solid seagreen;
 }
 
 .neighbourhood-list .item:hover {
-    background-color: dimgray;
+    background-color: cornflowerblue;
     color: white;
     cursor: pointer;
 }
