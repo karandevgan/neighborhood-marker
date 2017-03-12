@@ -55,7 +55,7 @@
                     <div class="neighbourhood-list" data-bind="foreach: {data: neighbourhoods, as: 'neighbourhood'}">
                         <div class="item" data-bind="event: {'click': openNeighbourhoodDetail.bind(neighbourhood)}">
                             <span data-bind="text: neighbourhood.name"></span>
-                            <a href="javascript:void(0);" data-bind="event: {'click': removeNeighbour.bind(neighbourhood)}">X</a>
+                            <a href="javascript:void(0);" data-bind="event: {'click': removeNeighbour.bind(neighbourhood)}, clickBubble: false">X</a>
                         </div>
                     </div>
                 </section>
