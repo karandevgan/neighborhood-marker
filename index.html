@@ -71,7 +71,9 @@
                             <div class="close" data-bind="event: {'click': closeNeighbourhoodDetail}">X</div>
                         </header>
                         <div class="nearby-restaurants">
-                            <h4>Near By Restaurants</h4>
+                            <header>
+                                <h4>Near By Restaurants</h4>
+                            </header>
                             <h5 data-bind="visible: !self.areRestaurantsLoaded()">Loading.....</h5>
                             <ul data-bind="foreach: {data: nearByRestaurants, as: 'restaurant'}">
                                 <li>

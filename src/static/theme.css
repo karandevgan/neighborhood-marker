@@ -224,6 +224,12 @@ html, body {
 
 .nearby-restaurants {
     margin-top: 50px;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.nearby-restaurants header h4 {
+    margin-top: 0px;
 }
 
 .slide-in-detail {
