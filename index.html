@@ -74,7 +74,10 @@
                             <header>
                                 <h4>Near By Restaurants</h4>
                             </header>
-                            <h5 data-bind="visible: !self.areRestaurantsLoaded()">Loading.....</h5>
+                            <p data-bind="visible: !self.areRestaurantsLoaded()">Loading.....</p>
+                            <p data-bind="visible: self.nearByRestaurants().length === 0 && self.areRestaurantsLoaded()">
+                                Oops! Zomato was unable to find nearby restaurants.
+                            </p>
                             <ul data-bind="foreach: {data: nearByRestaurants, as: 'restaurant'}">
                                 <li>
                                     <p>

@@ -242,7 +242,6 @@ function MapViewModel() {
                 xhr.setRequestHeader('user-key', zomatoAPIKey);
             }
         }).done(function (data) {
-            self.areRestaurantsLoaded(true);
             if (data && data.nearby_restaurants) {
                 data.nearby_restaurants.some(function (obj, index) {
                     if (index == 10)
@@ -251,7 +250,11 @@ function MapViewModel() {
                 });
             }
         }).fail(function (data) {
-            console.error(data);
+            if (data.status === 404) {
+                self.nearByRestaurants([]);
+            }
+        }).always(function() {
+            self.areRestaurantsLoaded(true);
         });
     }
 
