@@ -224,7 +224,7 @@ html, body {
 
 .nearby-restaurants {
     margin-top: 50px;
-    max-height: 400px;
+    max-height: calc(100vh - 116px);
     overflow-y: scroll;
 }
 
