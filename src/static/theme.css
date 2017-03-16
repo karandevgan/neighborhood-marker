@@ -211,11 +211,19 @@ html, body {
     position: relative;
 }
 
-.neighbourhood-detail header h3 {
-    position: absolute;
-    margin-top: 11px;
+.neighbourhood-details-container {
     margin-left: 10px;
+    margin-right: 10px;
+}
+
+.neighbourhood-detail header h3 {
+    position: relative;
+    top: 11px;
     width: 93%;
+}
+
+.nearby-restaurants {
+    margin-top: 50px;
 }
 
 .slide-in-detail {

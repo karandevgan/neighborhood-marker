@@ -65,10 +65,24 @@
         <aside>
             <div class="neighbourhood-detail-container">
                 <div class="neighbourhood-detail">
-                    <header>
-                        <h3 data-bind="text:neighbourhood().name">Loading...</h3>
-                        <div class="close" data-bind="event: {'click': closeNeighbourhoodDetail}">X</div>
-                    </header>
+                    <div class="neighbourhood-details-container">
+                        <header>
+                            <h3 data-bind="text:neighbourhood().name">Loading...</h3>
+                            <div class="close" data-bind="event: {'click': closeNeighbourhoodDetail}">X</div>
+                        </header>
+                        <div class="nearby-restaurants">
+                            <h4>Near By Restaurants</h4>
+                            <h5 data-bind="visible: !self.areRestaurantsLoaded()">Loading.....</h5>
+                            <ul data-bind="foreach: {data: nearByRestaurants, as: 'restaurant'}">
+                                <li>
+                                    <p>
+                                        <a data-bind="attr:{href: restaurant.url}, text: restaurant.name" target="_blank"></a>
+                                        - <span data-bind="text: restaurant.location"></span>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -76,8 +90,9 @@
     <script id="info-window-template" type="text/info-window-template">
         <b>%PLACE_NAME%</b><br />
         <a href="javascript:void(0);" id="add_neighbourhood_link">Add to Neighbourhood List</a>
+        <!--<p id="add_neighbourhood_text">Added in neighbourhood list</p>-->
     </script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB6NFEqUh3MOuxSW6t1cn04RVrMz-3snU&libraries=places"></script>
     <script src="src/js/map.model.js"></script>
     <script src="src/js/app.js"></script>

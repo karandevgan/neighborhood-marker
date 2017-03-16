@@ -1,3 +1,10 @@
+var Restaurant = function (_rest) {
+    this.name = _rest.name;
+    this.url = _rest.url;
+    this.cuisines = _rest.cuisines;
+    this.location = _rest.location.locality_verbose;
+};
+
 function MapViewModel() {
     var self = this;
 
@@ -19,8 +26,10 @@ function MapViewModel() {
     var searchInputTextBox = document.getElementById('inputSearch');
     var neighbourhoodPanel = document.getElementsByClassName('neighbourhood-panel')[0];
     var neighbourhoodDetail = document.getElementsByClassName('neighbourhood-detail-container')[0];
-    // Declare all the objects here
+    var zomatoAPI = 'https://developers.zomato.com/api/v2.1/geocode?lat=%lat%&lon=%lng%';
+    var zomatoAPIKey = 'f94e6f8989e73239208980faedbe4f84';
 
+    // Declare all the objects here
     self.mapObj = new MapClass();
     self.init = mapObj.init(document.getElementById('map'));
     self.searchText = ko.observable("");
@@ -28,8 +37,10 @@ function MapViewModel() {
     self.isResultsPanelActive = ko.observable(true);
     self.searchNeighbourhoodText = ko.observable("");
     self.neighbourhood = ko.observable({});
-    // Declare all the functions here
+    self.nearByRestaurants = ko.observableArray([]);
+    self.areRestaurantsLoaded = ko.observable(false);
 
+    // Declare all the functions here
     self.handleKeyPress = handleKeyPress;
     self.resetSelection = resetSelection;
     self.getAddresses = getAddresses;
@@ -49,8 +60,8 @@ function MapViewModel() {
         var filter = self.searchNeighbourhoodText().toLowerCase();
         return self.getNeighbourhoods(filter);
     });
-    // Define all the functions here
 
+    // Define all the functions here
     function handleKeyPress(data, event) {
         if ((event.key === keyCode.ENTER && self.isResultsPanelActive() === false) ||
             (Object.values(keyCode).indexOf(event.key) === -1 && isSearchTextChanged)) {
@@ -212,10 +223,36 @@ function MapViewModel() {
     }
 
     function openNeighbourhoodDetail(neighbourhood) {
-        console.log(neighbourhood);
         self.neighbourhood(neighbourhood);
+        getNearbyRestaurants(neighbourhood);
         neighbourhoodDetail.classList.remove('slide-out-detail');
         neighbourhoodDetail.classList.add('slide-in-detail');
+    }
+
+    function getNearbyRestaurants(neighbourhood) {
+        self.nearByRestaurants([]);
+        self.areRestaurantsLoaded(false);
+        var lat = neighbourhood.position.lat;
+        var lng = neighbourhood.position.lng;
+        var zomatoAPIFormatted = zomatoAPI.replace('%lat%', lat).replace('%lng%', lng);
+        $.ajax({
+            url: zomatoAPIFormatted,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('user-key', zomatoAPIKey);
+            }
+        }).done(function (data) {
+            self.areRestaurantsLoaded(true);
+            if (data && data.nearby_restaurants) {
+                data.nearby_restaurants.some(function (obj, index) {
+                    if (index == 10)
+                        return true;
+                    self.nearByRestaurants.push(new Restaurant(obj.restaurant));
+                });
+            }
+        }).fail(function (data) {
+            console.error(data);
+        });
     }
 
     function closeNeighbourhoodDetail() {
