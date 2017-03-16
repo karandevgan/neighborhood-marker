@@ -122,6 +122,7 @@ html, body {
 }
 
 .close {
+    z-index: 1;
     color: skyblue;
     font-family: Arial, Helvetica, sans-serif;
     position: absolute;
@@ -213,23 +214,47 @@ html, body {
 
 .neighbourhood-details-container {
     margin-left: 10px;
+    position: relative;
+    height: 100%;
     margin-right: 10px;
 }
 
-.neighbourhood-detail header h3 {
+.neighbourhood-detail header {
     position: relative;
-    top: 11px;
+    top: 15px;
     width: 93%;
+
+}
+
+@media screen and (max-width: 700px) {
+    .neighbourhood-detail header h3 {
+        font-size: 15px;
+    }
+    .nearby-restaurants header h4 {
+        font-size: 13px;
+    }
+    .nearby-restaurants ul {
+        font-size: 12px;
+    }
+}
+
+.neighbourhood-detail header h3 {
+    margin: 0px;
 }
 
 .nearby-restaurants {
-    margin-top: 50px;
-    max-height: calc(100vh - 145px);
+    margin-top: 30px;
+    height: calc(100% - 80px);
     overflow-y: scroll;
 }
 
 .nearby-restaurants header h4 {
     margin-top: 0px;
+}
+
+.nearby-restaurants ul {
+    position: relative;
+    top: 10px;
 }
 
 .slide-in-detail {
